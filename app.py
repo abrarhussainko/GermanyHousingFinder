@@ -13,53 +13,54 @@ def serve_index():
 @app.route('/api/search', methods=['POST'])
 def search_housing():
     data = request.json or {}
-    city = data.get('city', '').strip()
-    max_price = data.get('maxPrice', '1000')
+    city = data.get('city', '').strip() or "Frankfurt"
+    max_price = data.get('maxPrice', '300')
     housing_type = data.get('housingType', 'all')
 
-    encoded_city = urllib.parse.quote(city) if city else "Giessen"
+    encoded_city = urllib.parse.quote(city)
+    
+    # Precise Google Search queries targeting budget student housing & WGs under €300/€400
+    query_wg = urllib.parse.quote(f"site:wg-gesucht.de {city} wg zimmer studentenwohnheim miete bis {max_price}")
+    query_klein = urllib.parse.quote(f"site:kleinanzeigen.de wg zimmer zimmer mieten {city} bis {max_price} euro")
+    query_dorm = urllib.parse.quote(f"site:studierendenwerk*.de studentenwohnheim wohnheim zimmer {city}")
+    query_immo = urllib.parse.quote(f"site:immowelt.de wg zimmer studentenwohnung {city}")
 
-    # Direct Search Portal Links (Official Real-Time Platforms)
     portals = [
         {
             "id": "wg_gesucht",
             "source": "WG-Gesucht.de",
-            "title": f"Live WG & Apartment Listings in {city or 'Germany'}",
-            "type": "wg" if housing_type in ['wg', 'all'] else "single",
-            "price": f"Up to €{max_price}/mo",
-            "description": f"Browse active, real-time listings in {city or 'Germany'} directly on WG-Gesucht with zero filters blocked.",
-            "directLink": f"https://www.wg-gesucht.de/wg-gesucht-in-{encoded_city}.0.0.0.html",
-            "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80"
+            "title": f"Student WGs & Cheap Rooms in {city}",
+            "price_range": f"From €180 to €{max_price}/mo",
+            "description": f"Active shared flat (WG) rooms and student sublets in {city} under €{max_price}.",
+            "googleSearchUrl": f"https://www.google.com/search?q={query_wg}",
+            "directPortalUrl": f"https://www.wg-gesucht.de/wg-gesucht-in-{encoded_city}.0.0.0.html"
+        },
+        {
+            "id": "studierendenwerk",
+            "source": "Studierendenwerk (Dormitories)",
+            "title": f"Official Student Dorms in {city}",
+            "price_range": f"From €200 to €350/mo",
+            "description": f"Subsidized public student residences and dorm rooms in {city}.",
+            "googleSearchUrl": f"https://www.google.com/search?q={query_dorm}",
+            "directPortalUrl": f"https://www.google.com/search?q={urllib.parse.quote(f'studierendenwerk wohnen {city}')}"
         },
         {
             "id": "kleinanzeigen",
             "source": "Kleinanzeigen.de",
-            "title": f"Private Landlord Offers in {city or 'Germany'}",
-            "type": "full" if housing_type == 'full' else "all",
-            "price": f"Up to €{max_price}/mo",
-            "description": f"Direct landlord posts, shared flats, and sublets available in {city or 'Germany'}.",
-            "directLink": f"https://www.kleinanzeigen.de/s-wohnung-mieten/{encoded_city}/c203",
-            "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80"
+            "title": f"Private Sublets & Budget Rooms in {city}",
+            "price_range": f"From €150 to €{max_price}/mo",
+            "description": f"Private landlord listings, interim sublets (Zwischenmiete), and low-cost rooms in {city}.",
+            "googleSearchUrl": f"https://www.google.com/search?q={query_klein}",
+            "directPortalUrl": f"https://www.kleinanzeigen.de/s-wohnung-mieten/{encoded_city}/c203"
         },
         {
             "id": "immowelt",
             "source": "Immowelt.de",
-            "title": f"Verified Apartments & Studios in {city or 'Germany'}",
-            "type": "single",
-            "price": f"Up to €{max_price}/mo",
-            "description": f"Professional real estate listings, studios, and long-term apartments in {city or 'Germany'}.",
-            "directLink": f"https://www.immowelt.de/liste/{encoded_city}/wohnungen/mieten",
-            "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80"
-        },
-        {
-            "id": "immoscout",
-            "source": "ImmobilienScout24",
-            "title": f"ImmoScout24 Housing Feed - {city or 'Germany'}",
-            "type": "full",
-            "price": f"Up to €{max_price}/mo",
-            "description": f"Germany's largest property portal live search results for {city or 'Germany'}.",
-            "directLink": f"https://www.immobilienscout24.de/Suche/de/{encoded_city}/wohnung-mieten",
-            "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=600&q=80"
+            "title": f"1-Room Student Units in {city}",
+            "price_range": f"Up to €{max_price}/mo",
+            "description": f"Micro-apartments, 1-room units, and student flats in {city}.",
+            "googleSearchUrl": f"https://www.google.com/search?q={query_immo}",
+            "directPortalUrl": f"https://www.immowelt.de/liste/{encoded_city}/wohnungen/mieten"
         }
     ]
 
@@ -71,8 +72,8 @@ def generate_message():
     name = data.get('name', '').strip() or "[Your Name]"
     email = data.get('email', '').strip() or "[Your Email]"
     phone = data.get('phone', '').strip() or "[Your Phone Number]"
-    occupation = data.get('occupation', '').strip() or "[Your Occupation/Student Status]"
-    status = data.get('status', 'Applicant')
+    occupation = data.get('occupation', '').strip() or "Student"
+    status = data.get('status', 'Student')
     city = data.get('city', '').strip() or "[City]"
     move_date = data.get('moveDate', '').strip() or "as soon as possible"
     listing_title = data.get('listingTitle', 'your accommodation listing')
@@ -87,7 +88,7 @@ def generate_message():
         f"- Beruf / Status: {occupation} ({status})\n"
         f"- Geplanter Einzugstermin: {move_date}\n\n"
         f"Ich bin eine ruhige, saubere und zuverlässige Person. Die Miete kann ich durch eigenes Einkommen / "
-        f"Ersparnisse pünktlich begleichen. Erforderliche Unterlagen (Einkommensnachweis, SCHUFA, Selbstauskunft) "
+        f"Ersparnisse pünktlich begleichen. Erforderliche Unterlagen (Einkommensnachweis, SCHUFA, Immatrikulationsbescheinigung) "
         f"stelle ich Ihnen gerne direkt zur Verfügung.\n\n"
         f"Über die Möglichkeit zu einem Besichtigungstermin würde ich mich sehr freuen.\n\n"
         f"Mit freundlichen Grüßen,\n"
@@ -105,7 +106,7 @@ def generate_message():
         f"- Profession / Status: {occupation} ({status})\n"
         f"- Intended move-in date: {move_date}\n\n"
         f"I am a quiet, tidy, and responsible person. I can reliably pay the rent on time through my income / "
-        f"savings. I am happy to provide all required documents (proof of income, SCHUFA credit check) right away.\n\n"
+        f"savings. I am happy to provide all required documents (proof of income, enrollment certificate) right away.\n\n"
         f"I would be delighted to arrange a viewing appointment.\n\n"
         f"Best regards,\n"
         f"{name}\n"
