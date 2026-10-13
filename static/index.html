@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Germany Accommodation Finder & Auto German Message Generator</title>
+  <title>Germany Accommodation Finder & Message Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -22,48 +22,48 @@
   <main class="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
 
     <!-- Left Controls Panel -->
-    <aside class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-5 space-y-5 h-fit">
+    <aside class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-5 space-y-4 h-fit">
       
+      <div class="border-b border-slate-700 pb-3">
+        <h2 class="text-sm font-bold text-indigo-400"><i class="fa-solid fa-user mr-2"></i>Applicant Details</h2>
+        <p class="text-[11px] text-slate-400">Fill in your information to generate custom application emails.</p>
+      </div>
+
       <div>
-        <label class="text-xs font-semibold text-slate-300 block mb-1"><i class="fa-solid fa-user-tag mr-2 text-indigo-400"></i>Applicant Profile</label>
-        <select id="userStatus" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
+        <label class="text-xs font-semibold text-slate-300 block mb-1">Full Name</label>
+        <input type="text" id="userName" placeholder="e.g. John Doe" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Email</label>
+          <input type="email" id="userEmail" placeholder="name@email.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Phone Number</label>
+          <input type="text" id="userPhone" placeholder="+49 123 45678" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-300 block mb-1">Occupation / Program</label>
+        <input type="text" id="userOccupation" placeholder="e.g. Student at JLU / Software Dev" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-300 block mb-1">Status</label>
+        <select id="userStatus" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
           <option value="Student">University Student</option>
           <option value="Working Professional">Working Professional</option>
           <option value="Expat / Relocating">Expat / New Arrival</option>
-          <option value="Family">Family</option>
         </select>
-      </div>
-
-      <div class="space-y-3">
-        <div>
-          <label class="text-xs font-semibold text-slate-400 block mb-1">Full Name</label>
-          <input type="text" id="userName" placeholder="Enter your full name..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100">
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-slate-400 block mb-1">Email Address</label>
-          <input type="email" id="userEmail" placeholder="your.email@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100">
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-slate-400 block mb-1">Occupation / University</label>
-          <input type="text" id="userOccupation" placeholder="e.g. Student at JLU / Engineer" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100">
-        </div>
       </div>
 
       <hr class="border-slate-700/50">
 
       <div>
-        <label class="text-xs font-semibold text-slate-300 block mb-1"><i class="fa-solid fa-location-dot mr-2 text-indigo-400"></i>Target City</label>
-        <input type="text" id="cityInput" placeholder="Enter city (e.g. Frankfurt, Giessen, Berlin...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100">
-      </div>
-
-      <div>
-        <label class="text-xs font-semibold text-slate-300 block mb-1"><i class="fa-solid fa-building mr-2 text-indigo-400"></i>Housing Type</label>
-        <select id="housingType" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
-          <option value="all">All Accommodation Types</option>
-          <option value="wg">WG / Shared Apartment</option>
-          <option value="single">Studio / 1-Room Flat</option>
-          <option value="full">Private Full Apartment</option>
-        </select>
+        <label class="text-xs font-semibold text-slate-300 block mb-1"><i class="fa-solid fa-location-dot mr-1 text-indigo-400"></i>Target City</label>
+        <input type="text" id="cityInput" placeholder="Enter city (e.g. Frankfurt, Giessen, Berlin...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
       </div>
 
       <div>
@@ -71,20 +71,20 @@
           <span>Max Monthly Rent</span>
           <span id="priceDisplay" class="text-indigo-400 font-bold">€800</span>
         </div>
-        <input type="range" id="priceRange" min="200" max="2000" step="25" value="800" class="w-full accent-indigo-500 cursor-pointer" oninput="document.getElementById('priceDisplay').innerText = '€' + this.value">
+        <input type="range" id="priceRange" min="200" max="2500" step="50" value="800" class="w-full accent-indigo-500 cursor-pointer" oninput="document.getElementById('priceDisplay').innerText = '€' + this.value">
       </div>
 
-      <button onclick="performSearch()" class="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-medium py-3 rounded-lg shadow-lg flex items-center justify-center space-x-2 transition">
+      <button onclick="performSearch()" class="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center space-x-2 transition">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <span>Find Accommodation</span>
+        <span>Search Accommodation</span>
       </button>
 
     </aside>
 
     <!-- Right Results Grid -->
     <section class="lg:col-span-3 space-y-4">
-      <div class="flex justify-between items-center bg-slate-800/40 p-3 border border-slate-700/50 rounded-lg">
-        <span class="text-xs text-slate-300 font-medium" id="resultCount">Set your requirements on the left and click "Find Accommodation"</span>
+      <div class="bg-slate-800/40 p-3 border border-slate-700/50 rounded-lg">
+        <span class="text-xs text-slate-300 font-medium" id="resultCount">Enter your city and details, then click "Search Accommodation"</span>
       </div>
 
       <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -96,14 +96,14 @@
   <div id="messageModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-800 border border-slate-700 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-        <h3 class="text-base font-bold text-indigo-400"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Tailored German Application & English Translation</h3>
+        <h3 class="text-sm font-bold text-indigo-400"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Tailored German Application Message</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div class="flex justify-between items-center mb-1">
-            <span class="text-xs font-bold text-amber-400">German Message (Copy & Send to Owner)</span>
+            <span class="text-xs font-bold text-amber-400">German Message (Bewerbungstext)</span>
             <button onclick="copyToClipboard('germanText')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded text-slate-200"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
           </div>
           <textarea id="germanText" readonly class="w-full h-80 bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-slate-200 font-mono"></textarea>
@@ -121,80 +121,63 @@
   </div>
 
   <script>
-    let currentListings = [];
+    let activePortals = [];
 
     async function performSearch() {
-      const city = document.getElementById('cityInput').value.trim() || 'Frankfurt';
+      const city = document.getElementById('cityInput').value.trim();
       const maxPrice = document.getElementById('priceRange').value;
-      const housingType = document.getElementById('housingType').value;
 
       const res = await fetch('/api/search', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ city, maxPrice, housingType, minPrice: 0 })
+        body: JSON.stringify({ city, maxPrice })
       });
 
       const json = await res.json();
-      currentListings = json.data;
-      document.getElementById('resultCount').innerText = `Found ${json.count} verified listings for ${city} (Max €${maxPrice})`;
+      activePortals = json.data;
+      document.getElementById('resultCount').innerText = `Active search portals ready for ${city || 'Germany'} (Max €${maxPrice}/month)`;
 
       const grid = document.getElementById('resultsGrid');
       grid.innerHTML = '';
 
-      if (json.count === 0) {
-        grid.innerHTML = `<div class="col-span-2 text-center py-12 text-slate-400 text-sm">No listings found within this price range. Try increasing your max rent slider.</div>`;
-        return;
-      }
-
       json.data.forEach((item, index) => {
         grid.innerHTML += `
-          <div class="bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden flex flex-col justify-between hover:border-slate-600 transition">
+          <div class="bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden flex flex-col justify-between">
             <div>
-              <img src="${item.images[0]}" class="h-44 w-full object-cover">
+              <img src="${item.image}" class="h-40 w-full object-cover">
               <div class="p-4 space-y-2">
                 <div class="flex justify-between items-start">
                   <h3 class="font-bold text-sm text-slate-100">${item.title}</h3>
-                  <span class="text-indigo-400 font-extrabold text-base">€${item.price}/mo</span>
+                  <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded">${item.source}</span>
                 </div>
-                <p class="text-xs text-slate-400"><i class="fa-solid fa-location-dot mr-1"></i>${item.address} • ${item.size}</p>
-                <p class="text-xs text-slate-300 line-clamp-2">${item.description}</p>
+                <p class="text-xs text-slate-300">${item.description}</p>
               </div>
             </div>
             <div class="p-4 pt-0 space-y-2">
-              <button onclick="generateMessage(${index})" class="w-full bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/30 text-xs py-2 rounded-lg font-medium transition">
-                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Auto-Generate German Message
-              </button>
-              <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer" class="block text-center text-xs text-cyan-400 hover:text-cyan-300 underline font-medium">
-                Apply on ${item.source} (Opens in New Tab) <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+              <a href="${item.directLink}" target="_blank" rel="noopener noreferrer" class="block text-center bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs py-2 rounded-lg transition">
+                Open Official Live Listings on ${item.source} <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
               </a>
+              <button onclick="generateMessage('${item.source}', '${item.title}')" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs py-2 rounded-lg font-medium transition">
+                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Auto-Generate Message for this Listing
+              </button>
             </div>
           </div>
         `;
       });
     }
 
-    async function generateMessage(listingIndex) {
-      const item = currentListings[listingIndex];
-      const city = document.getElementById('cityInput').value.trim() || item.city;
-      const name = document.getElementById('userName').value.trim() || 'Applicant';
-      const email = document.getElementById('userEmail').value.trim() || 'email@example.com';
-      const occupation = document.getElementById('userOccupation').value.trim() || 'Applicant';
+    async function generateMessage(source, title) {
+      const city = document.getElementById('cityInput').value.trim() || 'Germany';
+      const name = document.getElementById('userName').value.trim();
+      const email = document.getElementById('userEmail').value.trim();
+      const phone = document.getElementById('userPhone').value.trim();
+      const occupation = document.getElementById('userOccupation').value.trim();
       const status = document.getElementById('userStatus').value;
 
       const res = await fetch('/api/generate-message', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ 
-          name, 
-          email, 
-          occupation, 
-          status, 
-          city, 
-          listingTitle: item.title,
-          listingAddress: item.address,
-          listingPrice: item.price,
-          listingSource: item.source
-        })
+        body: JSON.stringify({ name, email, phone, occupation, status, city, listingTitle: title, listingSource: source })
       });
 
       const json = await res.json();
@@ -208,8 +191,10 @@
       const el = document.getElementById(id);
       el.select();
       document.execCommand('copy');
-      alert('Message copied to clipboard! Switch to the listing tab to paste and send.');
+      alert('Message copied to clipboard!');
     }
+
+    performSearch();
   </script>
 </body>
 </html>
