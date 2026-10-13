@@ -14,51 +14,120 @@ def serve_index():
 def search_housing():
     data = request.json or {}
     city = data.get('city', '').strip() or "Frankfurt"
-    max_price = data.get('maxPrice', '800')
+    min_price = str(data.get('minPrice', '0'))
+    max_price = str(data.get('maxPrice', '1000'))
+    housing_type = data.get('housingType', 'all')  # wg, single, full, all
 
-    encoded_city = urllib.parse.quote(city)
-    
-    # 100% working, pre-filtered live search links (No 404s, No API keys, No Credit Cards required)
-    portals = [
-        {
+    q_city = urllib.parse.quote(city)
+    city_slug = city.lower().replace(" ", "-")
+
+    all_portals = []
+
+    # 1. WG-Gesucht (Shared Rooms & WG Focus)
+    if housing_type in ['wg', 'all']:
+        all_portals.append({
             "id": "wg_gesucht",
             "source": "WG-Gesucht.de",
-            "title": f"Live WG Rooms & Shared Flats in {city}",
-            "type": "Shared Room / WG",
-            "price_range": f"Up to €{max_price}/mo",
-            "description": f"View all active student WGs and room listings in {city}.",
-            "applyUrl": f"https://www.wg-gesucht.de/wg-gesucht-in-{encoded_city}.0.0.0.html"
-        },
-        {
-            "id": "kleinanzeigen",
-            "source": "Kleinanzeigen.de",
-            "title": f"Private Landlord Offers & Sublets in {city}",
-            "type": "Private Room / Apartment",
-            "price_range": f"Up to €{max_price}/mo",
-            "description": f"Direct private offers with zero agency fees in {city}.",
-            "applyUrl": f"https://www.kleinanzeigen.de/s-wohnung-mieten/{encoded_city}/preis::{max_price}/c203"
-        },
-        {
+            "title": f"WG-Zimmer & Shared Flat Offers in {city}",
+            "type": "WG / Shared Room",
+            "price_range": f"€{min_price} - €{max_price}/mo",
+            "description": f"Direct shared flat rooms and student WG listings in {city}.",
+            "applyUrl": f"https://www.wg-gesucht.de/wg-gesucht-in-{q_city}.0.0.0.html"
+        })
+
+    # 2. Kleinanzeigen (Private Offers across all budget types)
+    all_portals.append({
+        "id": "kleinanzeigen",
+        "source": "Kleinanzeigen.de",
+        "title": f"Private Landlord Offers in {city}",
+        "type": "Private Sublet / Flat",
+        "price_range": f"€{min_price} - €{max_price}/mo",
+        "description": f"Direct postings without agency fees for {housing_type.upper()} housing in {city}.",
+        "applyUrl": f"https://www.kleinanzeigen.de/s-wohnung-mieten/{q_city}/preis:{min_price}:{max_price}/c203"
+    })
+
+    # 3. Studierendenwerk (Student Dormitories - Filtered for low budget / student status)
+    if int(max_price) <= 600 or housing_type in ['wg', 'single', 'all']:
+        all_portals.append({
+            "id": "studierendenwerk",
+            "source": "Studierendenwerk (Dorms)",
+            "title": f"University Residences & Student Dorms in {city}",
+            "type": "Student Housing",
+            "price_range": f"€{min_price} - €{max_price}/mo",
+            "description": f"Public subsidized student dormitories and residence halls in {city}.",
+            "applyUrl": f"https://www.google.com/search?q={urllib.parse.quote(f'studierendenwerk wohnen {city}')}"
+        })
+
+    # 4. Immowelt (Studios & Apartments)
+    if housing_type in ['single', 'full', 'all']:
+        all_portals.append({
             "id": "immowelt",
             "source": "Immowelt.de",
-            "title": f"Studios & 1-Room Flats in {city}",
-            "type": "Studio Apartment",
-            "price_range": f"Up to €{max_price}/mo",
-            "description": f"Verified studio units and long-term rentals in {city}.",
-            "applyUrl": f"https://www.immowelt.de/liste/{encoded_city}/wohnungen/mieten?prmax={max_price}"
-        },
-        {
+            "title": f"Studios & Apartments in {city}",
+            "type": "Studio / Flat",
+            "price_range": f"€{min_price} - €{max_price}/mo",
+            "description": f"Verified rental listings matching €{min_price}–€{max_price} in {city}.",
+            "applyUrl": f"https://www.immowelt.de/liste/{q_city}/wohnungen/mieten?prmin={min_price}&prmax={max_price}"
+        })
+
+    # 5. ImmobilienScout24 (Full Flats)
+    if housing_type in ['full', 'single', 'all']:
+        all_portals.append({
             "id": "immoscout",
             "source": "ImmobilienScout24",
-            "title": f"Full Apartments & Student Flats in {city}",
+            "title": f"Flats & Student Accommodation in {city}",
             "type": "Apartment / Flat",
-            "price_range": f"Up to €{max_price}/mo",
-            "description": f"Germany's largest property portal results for {city}.",
-            "applyUrl": f"https://www.immobilienscout24.de/Suche/de/{encoded_city}/wohnung-mieten?maxprice={max_price}"
-        }
-    ]
+            "price_range": f"€{min_price} - €{max_price}/mo",
+            "description": f"ImmoScout24 listings for {city} between €{min_price} and €{max_price}.",
+            "applyUrl": f"https://www.immobilienscout24.de/Suche/de/{q_city}/wohnung-mieten?price={min_price}.0-{max_price}.0"
+        })
 
-    return jsonify({"status": "success", "count": len(portals), "data": portals})
+    # 6. WG-Suche
+    if housing_type in ['wg', 'all']:
+        all_portals.append({
+            "id": "wg_suche",
+            "source": "WG-Suche.de",
+            "title": f"Shared Flats & Student WGs in {city}",
+            "type": "WG Room",
+            "price_range": f"€{min_price} - €{max_price}/mo",
+            "description": f"Filtered WG room search in {city}.",
+            "applyUrl": f"https://www.wg-suche.de/wg-zimmer-in-{city_slug}"
+        })
+
+    # 7. MeinStadt
+    all_portals.append({
+        "id": "meinstadt",
+        "source": "MeinStadt.de",
+        "title": f"Local City Housing in {city}",
+        "type": "Local Apartment",
+        "price_range": f"€{min_price} - €{max_price}/mo",
+        "description": f"Local community housing listings in {city}.",
+        "applyUrl": f"https://wohnen.meinstadt.de/{q_city}/immobilien/wohnung-mieten"
+    })
+
+    # 8. HousingAnywhere (Furnished / International Student)
+    all_portals.append({
+        "id": "housinganywhere",
+        "source": "HousingAnywhere",
+        "title": f"Furnished Student Rooms in {city}",
+        "type": "Furnished Flat / Room",
+        "price_range": f"€{min_price} - €{max_price}/mo",
+        "description": f"Mid-term student accommodation in {city}.",
+        "applyUrl": f"https://housinganywhere.com/s/{city}--Germany?priceMin={min_price}00&priceMax={max_price}00"
+    })
+
+    # 9. Google Live Custom Search Index
+    all_portals.append({
+        "id": "google_live",
+        "source": "Google Live Index",
+        "title": f"Live Indexed Listings for {city}",
+        "type": "All Active Portals",
+        "price_range": f"€{min_price} - €{max_price}/mo",
+        "description": f"Directly query indexed posts on WG-Gesucht & Kleinanzeigen for {city}.",
+        "applyUrl": f"https://www.google.com/search?q={urllib.parse.quote(f'site:wg-gesucht.de OR site:kleinanzeigen.de {city} {housing_type} miete {min_price} bis {max_price} euro')}"
+    })
+
+    return jsonify({"status": "success", "count": len(all_portals), "data": all_portals})
 
 @app.route('/api/generate-message', methods=['POST'])
 def generate_message():
