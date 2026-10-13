@@ -24,30 +24,29 @@
     <!-- Left Controls Panel -->
     <aside class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-5 space-y-4 h-fit">
       
-      <div class="border-b border-slate-700 pb-3">
-        <h2 class="text-sm font-bold text-indigo-400"><i class="fa-solid fa-user mr-2"></i>Applicant Details</h2>
-        <p class="text-[11px] text-slate-400">Fill in your information to generate custom application emails.</p>
+      <div class="border-b border-slate-700 pb-2">
+        <h2 class="text-xs font-bold text-indigo-400 uppercase tracking-wider"><i class="fa-solid fa-user mr-2"></i>Applicant Profile</h2>
       </div>
 
       <div>
         <label class="text-xs font-semibold text-slate-300 block mb-1">Full Name</label>
-        <input type="text" id="userName" placeholder="e.g. John Doe" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+        <input type="text" id="userName" value="" placeholder="Enter your full name..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
       </div>
 
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-xs font-semibold text-slate-300 block mb-1">Email</label>
-          <input type="email" id="userEmail" placeholder="name@email.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+          <input type="email" id="userEmail" value="" placeholder="name@email.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
         </div>
         <div>
-          <label class="text-xs font-semibold text-slate-300 block mb-1">Phone Number</label>
-          <input type="text" id="userPhone" placeholder="+49 123 45678" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Phone</label>
+          <input type="text" id="userPhone" value="" placeholder="+49 123 45678" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
         </div>
       </div>
 
       <div>
         <label class="text-xs font-semibold text-slate-300 block mb-1">Occupation / Program</label>
-        <input type="text" id="userOccupation" placeholder="e.g. Student at JLU / Software Dev" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+        <input type="text" id="userOccupation" value="" placeholder="e.g. Student at JLU / Developer" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
       </div>
 
       <div>
@@ -63,28 +62,28 @@
 
       <div>
         <label class="text-xs font-semibold text-slate-300 block mb-1"><i class="fa-solid fa-location-dot mr-1 text-indigo-400"></i>Target City</label>
-        <input type="text" id="cityInput" placeholder="Enter city (e.g. Frankfurt, Giessen, Berlin...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
+        <input type="text" id="cityInput" value="" placeholder="e.g. Giessen, Frankfurt, Berlin..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-100">
       </div>
 
       <div>
         <div class="flex justify-between text-xs font-semibold text-slate-300 mb-1">
           <span>Max Monthly Rent</span>
-          <span id="priceDisplay" class="text-indigo-400 font-bold">€800</span>
+          <span id="priceDisplay" class="text-indigo-400 font-bold">€300</span>
         </div>
-        <input type="range" id="priceRange" min="200" max="2500" step="50" value="800" class="w-full accent-indigo-500 cursor-pointer" oninput="document.getElementById('priceDisplay').innerText = '€' + this.value">
+        <input type="range" id="priceRange" min="150" max="1500" step="25" value="300" class="w-full accent-indigo-500 cursor-pointer" oninput="document.getElementById('priceDisplay').innerText = '€' + this.value">
       </div>
 
-      <button onclick="performSearch()" class="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center space-x-2 transition">
+      <button onclick="performSearch()" class="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-medium py-2.5 rounded-lg text-xs flex items-center justify-center space-x-2 transition shadow-lg">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <span>Search Accommodation</span>
+        <span>Find Accommodation</span>
       </button>
 
     </aside>
 
     <!-- Right Results Grid -->
     <section class="lg:col-span-3 space-y-4">
-      <div class="bg-slate-800/40 p-3 border border-slate-700/50 rounded-lg">
-        <span class="text-xs text-slate-300 font-medium" id="resultCount">Enter your city and details, then click "Search Accommodation"</span>
+      <div class="bg-slate-800/40 p-3 border border-slate-700/50 rounded-lg flex justify-between items-center">
+        <span class="text-xs text-slate-300 font-medium" id="resultCount">Enter target city and details, then click "Find Accommodation"</span>
       </div>
 
       <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -103,7 +102,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div class="flex justify-between items-center mb-1">
-            <span class="text-xs font-bold text-amber-400">German Message (Bewerbungstext)</span>
+            <span class="text-xs font-bold text-amber-400">German Message (Copy & Send)</span>
             <button onclick="copyToClipboard('germanText')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded text-slate-200"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
           </div>
           <textarea id="germanText" readonly class="w-full h-80 bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-slate-200 font-mono"></textarea>
@@ -121,10 +120,8 @@
   </div>
 
   <script>
-    let activePortals = [];
-
     async function performSearch() {
-      const city = document.getElementById('cityInput').value.trim();
+      const city = document.getElementById('cityInput').value.trim() || 'Giessen';
       const maxPrice = document.getElementById('priceRange').value;
 
       const res = await fetch('/api/search', {
@@ -134,31 +131,34 @@
       });
 
       const json = await res.json();
-      activePortals = json.data;
-      document.getElementById('resultCount').innerText = `Active search portals ready for ${city || 'Germany'} (Max €${maxPrice}/month)`;
+      document.getElementById('resultCount').innerText = `Active Student Housing & WG Portals for ${city} (Max €${maxPrice}/month)`;
 
       const grid = document.getElementById('resultsGrid');
       grid.innerHTML = '';
 
-      json.data.forEach((item, index) => {
+      json.data.forEach((item) => {
         grid.innerHTML += `
-          <div class="bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden flex flex-col justify-between">
+          <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-5 flex flex-col justify-between space-y-4">
             <div>
-              <img src="${item.image}" class="h-40 w-full object-cover">
-              <div class="p-4 space-y-2">
-                <div class="flex justify-between items-start">
-                  <h3 class="font-bold text-sm text-slate-100">${item.title}</h3>
-                  <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded">${item.source}</span>
-                </div>
-                <p class="text-xs text-slate-300">${item.description}</p>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded border border-indigo-500/20">${item.source}</span>
+                <span class="text-xs font-bold text-emerald-400">${item.price_range}</span>
               </div>
+              <h3 class="font-bold text-sm text-slate-100 mb-1">${item.title}</h3>
+              <p class="text-xs text-slate-300">${item.description}</p>
             </div>
-            <div class="p-4 pt-0 space-y-2">
-              <a href="${item.directLink}" target="_blank" rel="noopener noreferrer" class="block text-center bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs py-2 rounded-lg transition">
-                Open Official Live Listings on ${item.source} <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+
+            <div class="space-y-2 pt-2 border-t border-slate-700/60">
+              <a href="${item.googleSearchUrl}" target="_blank" rel="noopener noreferrer" class="block text-center bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs py-2 rounded-lg transition">
+                <i class="fa-brands fa-google mr-1"></i> Search Live Listings via Google <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
               </a>
-              <button onclick="generateMessage('${item.source}', '${item.title}')" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs py-2 rounded-lg font-medium transition">
-                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Auto-Generate Message for this Listing
+
+              <a href="${item.directPortalUrl}" target="_blank" rel="noopener noreferrer" class="block text-center bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium text-xs py-2 rounded-lg transition">
+                Direct Portal Link (${item.source}) <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+              </a>
+
+              <button onclick="generateMessage('${item.source}', '${item.title}')" class="w-full bg-slate-900 hover:bg-slate-950 text-indigo-300 border border-indigo-500/30 text-xs py-2 rounded-lg font-medium transition">
+                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Auto-Generate Application Message
               </button>
             </div>
           </div>
@@ -193,8 +193,6 @@
       document.execCommand('copy');
       alert('Message copied to clipboard!');
     }
-
-    performSearch();
   </script>
 </body>
 </html>
